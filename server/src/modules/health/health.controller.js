@@ -1,8 +1,8 @@
 import env from "../../config/env.js";
+import { sendSuccess } from "../../shared/responses/apiResponse.js";
 
 export const getHealth = (req, res) => {
-  res.status(200).json({
-    success: true,
+  return sendSuccess(res, {
     message: "LeadFlow CRM API is running.",
     data: {
       environment: env.nodeEnv,
