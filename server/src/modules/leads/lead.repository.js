@@ -90,3 +90,10 @@ export const findAllLeads = async ({
     },
   };
 };
+
+export const findLeadByEmail = async (email) => {
+  return await Lead.findOne({
+    email,
+    isDeleted: false,
+  }).lean();
+};
