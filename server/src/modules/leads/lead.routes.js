@@ -3,19 +3,56 @@ import { Router } from "express";
 import * as leadController from "./lead.controller.js";
 
 import authMiddleware from "../../middleware/auth.middleware.js";
+import authorize from "../../middleware/role.middleware.js";
+import validate from "../../middleware/validate.middleware.js";
+
+import {
+  createLeadSchema,
+  updateLeadSchema,
+} from "./lead.validator.js";
 
 const router = Router();
 
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
 router.use(authMiddleware);
 
-router.post("/", leadController.createLead);
+/*
+|--------------------------------------------------------------------------
+| Lead Routes
+|--------------------------------------------------------------------------
+*/
 
-router.get("/", leadController.getAllLeads);
+router.post(
+  "/",
+  validate(createLeadSchema),
+  leadController.createLead
+);
 
-router.get("/:id", leadController.getLeadById);
+router.get(
+  "/",
+  leadController.getAllLeads
+);
 
-router.patch("/:id", leadController.updateLead);
+router.get(
+  "/:id",
+  leadController.getLeadById
+);
 
-router.delete("/:id", leadController.deleteLead);
+router.patch(
+  "/:id",
+  validate(updateLeadSchema),
+  leadController.updateLead
+);
+
+router.delete(
+  "/:id",
+  authorize("ADMIN"),
+  leadController.deleteLead
+);
 
 export default router;
