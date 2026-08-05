@@ -9,6 +9,7 @@ import validate from "../../middleware/validate.middleware.js";
 import {
   createLeadSchema,
   updateLeadSchema,
+  assignLeadSchema
 } from "./lead.validator.js";
 
 const router = Router();
@@ -53,6 +54,13 @@ router.delete(
   "/:id",
   authorize("ADMIN"),
   leadController.deleteLead
+);
+
+router.patch(
+  "/:id/assign",
+  authorize("ADMIN"),
+  validate(assignLeadSchema),
+  leadController.assignLead
 );
 
 export default router;

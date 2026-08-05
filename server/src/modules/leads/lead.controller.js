@@ -70,3 +70,15 @@ export const deleteLead = asyncHandler(async (req, res) => {
     data: null,
   });
 });
+
+export const assignLead = asyncHandler(async (req, res) => {
+  const lead = await assignLeadService(
+    req.params.id,
+    req.body.userId
+  );
+
+  return sendSuccess(res, {
+    message: "Lead assigned successfully.",
+    data: lead,
+  });
+});

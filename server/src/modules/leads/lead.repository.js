@@ -104,3 +104,21 @@ export const findLeadByEmail = async (email) => {
         isDeleted: false,
     }).lean();
 };
+
+export const assignLead = async (leadId, userId) => {
+  return await Lead.findOneAndUpdate(
+    {
+      _id: leadId,
+      isDeleted: false,
+    },
+    {
+      assignedTo: userId,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+    .populate("assignedTo", "name email role")
+    .lean();
+};

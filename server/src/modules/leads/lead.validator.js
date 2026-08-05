@@ -11,3 +11,7 @@ export const createLeadSchema = z.object({
 
 export const updateLeadSchema =
     createLeadSchema.partial();
+
+export const assignLeadSchema = z.object({
+    userId: z.string(),
+});

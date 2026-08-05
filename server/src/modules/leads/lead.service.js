@@ -7,7 +7,10 @@ import {
     findAllLeads,
     updateLead,
     softDeleteLead,
+    assignLead,
 } from "./lead.repository.js";
+
+import { findUserById } from "../auth/auth.repository.js";
 /**
  * Create a new lead.
  * Throws an error if a lead with the same email already exists.
@@ -59,4 +62,23 @@ export const deleteLeadService = async (id) => {
     return {
         message: "Lead deleted successfully.",
     };
+};
+
+export const assignLeadService = async (
+    leadId,
+    userId
+) => {
+    const user = await findUserById(userId);
+
+    if (!user) {
+        throw new ApiError(404, "User not found.");
+    }
+
+    const lead = await assignLead(leadId, userId);
+
+    if (!lead) {
+        throw new ApiError(404, "Lead not found.");
+    }
+
+    return lead;
 };
