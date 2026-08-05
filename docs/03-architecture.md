@@ -321,3 +321,297 @@ Controller-->>React: JSON Response
 React-->>User: Render UI
 ```
 
+# 9. Authentication Flow
+
+LeadFlow CRM uses stateless authentication based on JSON Web Tokens (JWT).
+
+## Authentication Process
+
+1. User submits email and password.
+2. Credentials are validated.
+3. Password is verified using bcrypt.
+4. JWT Access Token is generated.
+5. Token is returned to the client.
+6. Client stores the token securely.
+7. Every protected request includes the token in the Authorization header.
+8. Authentication middleware verifies the token before allowing access.
+
+```mermaid
+sequenceDiagram
+
+participant User
+participant React
+participant API
+participant Auth
+participant Database
+
+User->>React: Login
+
+React->>API: POST /auth/login
+
+API->>Database: Verify User
+
+Database-->>API: User
+
+API->>Auth: Compare Password
+
+Auth-->>API: Success
+
+API-->>React: JWT Token
+
+React-->>User: Dashboard
+```
+
+# 10. Authorization Strategy
+
+LeadFlow CRM implements Role-Based Access Control (RBAC).
+
+The system currently supports two roles:
+
+## Administrator
+
+Permissions
+
+- Manage Users
+- View All Leads
+- Create Leads
+- Update Leads
+- Delete Leads
+- Assign Leads
+- View Dashboard Analytics
+
+---
+
+## Member
+
+Permissions
+
+- View Assigned Leads
+- Update Assigned Leads
+- Add Notes
+- View Activity Timeline
+
+Members cannot manage users or delete leads.
+
+Authorization is enforced on both the frontend and backend.
+
+# 11. Module Design
+
+The application is organized into independent feature modules.
+
+Current modules include:
+
+- Authentication
+- Users
+- Leads
+- Notes
+- Activities
+- Dashboard
+
+Each module owns its complete implementation.
+
+Example:
+
+```text
+leads/
+
+lead.routes.js
+
+lead.controller.js
+
+lead.service.js
+
+lead.repository.js
+
+lead.model.js
+
+lead.validator.js
+```
+
+This structure improves maintainability and enables independent feature development.
+
+# 12. Backend Folder Structure
+
+```text
+server/
+
+src/
+
+│
+
+├── app.js
+
+├── server.js
+
+│
+
+├── config/
+
+│
+
+├── middleware/
+
+│
+
+├── modules/
+
+│   ├── auth/
+
+│   ├── users/
+
+│   ├── leads/
+
+│   ├── notes/
+
+│   ├── activities/
+
+│   └── dashboard/
+
+│
+
+├── shared/
+
+│
+
+├── utils/
+
+│
+
+└── tests/
+```
+
+Feature modules contain all implementation related to that feature.
+
+# 13. Frontend Folder Structure
+
+```text
+client/
+
+src/
+
+│
+
+├── app/
+
+├── assets/
+
+├── components/
+
+├── features/
+
+│   ├── auth/
+
+│   ├── dashboard/
+
+│   ├── leads/
+
+│   ├── notes/
+
+│   └── users/
+
+├── hooks/
+
+├── layouts/
+
+├── routes/
+
+├── services/
+
+├── utils/
+
+└── types/
+```
+
+The frontend follows a feature-based organization similar to the backend.
+
+# 14. Design Principles
+
+LeadFlow CRM follows the following engineering principles:
+
+- Single Responsibility Principle
+- Separation of Concerns
+- Don't Repeat Yourself (DRY)
+- Keep It Simple (KISS)
+- Feature Isolation
+- RESTful API Design
+- Secure by Default
+- Reusable Components
+- Modular Development
+- Clean Code Practices
+
+# 15. Error Handling Strategy
+
+The application uses centralized error handling.
+
+The strategy consists of:
+
+- Global Error Middleware
+- Async Request Handler
+- Standardized Error Responses
+- HTTP Status Codes
+- Structured Error Messages
+
+Controllers never contain repetitive try-catch blocks.
+
+Errors propagate through middleware and are transformed into consistent API responses.
+
+# 16. Validation Strategy
+
+All incoming requests are validated before reaching controllers.
+
+Validation includes:
+
+- Required Fields
+- Data Types
+- String Length
+- Email Format
+- Business Rules
+
+Invalid requests return descriptive validation errors without executing business logic.
+
+# 17. Configuration Management
+
+Application configuration is managed using environment variables.
+
+Examples include:
+
+- Server Port
+- MongoDB Connection String
+- JWT Secret
+- Token Expiration
+- Client URL
+
+Sensitive information is never hardcoded into the source code.
+
+# 18. Security Considerations
+
+Security measures include:
+
+- Password Hashing (bcrypt)
+- JWT Authentication
+- Role-Based Authorization
+- Input Validation
+- CORS Configuration
+- HTTP Security Headers
+- Environment Variable Protection
+- Secure Password Storage
+
+These measures help protect the application against common security risks.
+
+# 19. Scalability & Future Evolution
+
+The chosen architecture supports future expansion without major restructuring.
+
+Potential future enhancements include:
+
+- Email Notifications
+- File Attachments
+- AI Lead Scoring
+- Calendar Integration
+- Real-Time Updates
+- Multi-Tenant Support
+- Audit Reports
+- Mobile Application
+
+New modules can be added without affecting existing modules because of the modular architecture.
+
